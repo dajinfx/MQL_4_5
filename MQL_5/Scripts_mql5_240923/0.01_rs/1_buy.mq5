@@ -16,7 +16,7 @@ string symbol_type;
 double deal_point;
 int magic_no = 101;
 double profit_dis_p = 500;
-double loss_dis_p = 100;
+double loss_dis_p = 200;
 
 void OnStart()
 {

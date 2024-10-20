@@ -11,7 +11,7 @@
 //+------------------------------------------------------------------+
 
 
-double Lots=0.01;
+double Lots=0.05;
 string symbol_type;
 double deal_point;
 int magic_no = 101;

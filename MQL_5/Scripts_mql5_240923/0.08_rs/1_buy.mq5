@@ -11,7 +11,7 @@
 //+------------------------------------------------------------------+
 
 
-double Lots=0.01;
+double Lots=0.08;
 string symbol_type;
 double deal_point;
 int magic_no = 101;
@@ -20,8 +20,8 @@ double loss_dis_p = 200;
 
 void OnStart()
 {
-   double bid=SymbolInfoDouble(Symbol(),SYMBOL_BID);
-   bool od_result = Od_Send(Symbol(),ORDER_TYPE_SELL, Lots, bid,loss_dis_p,profit_dis_p,"Scripts_mql5_sell",magic_no);
+   double ask1=SymbolInfoDouble(Symbol(),SYMBOL_ASK);
+   bool od_result = Od_Send(Symbol(),ORDER_TYPE_BUY, Lots, ask1,loss_dis_p,profit_dis_p,"Scripts_mql5_buy",magic_no);
 }
 
 
@@ -60,35 +60,13 @@ bool Od_Send(string symb, ENUM_ORDER_TYPE od_ty , double od_lots, double open_pr
    request.comment   = cmt;
    request.magic     = m_n;
    
-   bool od_send  = false;
-   for(int i=0;i<4;i++){
-      
-      if(i==0)
-      {
-         request.type_filling = ORDER_FILLING_BOC;
-      }
-      if(i==1)
-      {
-         request.type_filling = ORDER_FILLING_FOK;
-      }
-      if(i==2)
-      {
-         request.type_filling = ORDER_FILLING_IOC;
-      }
-      if(i==3)
-      {
-         request.type_filling = ORDER_FILLING_RETURN;
-      }
-      
-      od_send=OrderSend(request,result); 
-      if(!od_send)
-      {
-         Print(" GetLastError(): "+GetLastError());   
-      }else
-      {
-         Print(request.type_filling);   
-         break;
-      }
+   request.type_filling = ORDER_FILLING_IOC;
+   
+   bool od_send=OrderSend(request,result); 
+   if(!od_send)
+   {
+      Print(" GetLastError(): "+GetLastError());   
    }
+   
    return od_send;
 } 
