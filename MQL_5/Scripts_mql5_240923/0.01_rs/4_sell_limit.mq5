@@ -33,6 +33,8 @@ bool Od_Send(string symb, ENUM_ORDER_TYPE od_ty , double od_lots, double open_pr
                
    MqlTradeRequest request;
    MqlTradeResult  result;
+   ZeroMemory(request);
+   ZeroMemory(result);
    
    if(od_ty==ORDER_TYPE_BUY || od_ty==ORDER_TYPE_SELL){ 
       request.action   =TRADE_ACTION_DEAL;}

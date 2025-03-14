@@ -20,8 +20,13 @@ double loss_dis_p = 200;
 
 void OnStart()
 {
-   double ask1=SymbolInfoDouble(Symbol(),SYMBOL_ASK);
-   bool od_result = Od_Send(Symbol(),ORDER_TYPE_BUY, Lots, ask1,loss_dis_p,profit_dis_p,"Scripts_mql5_buy",magic_no);
+
+   bool od_result = false;
+   
+   while(!od_result){
+      double ask1=SymbolInfoDouble(Symbol(),SYMBOL_ASK);
+      od_result = Od_Send(Symbol(),ORDER_TYPE_BUY, Lots, ask1,loss_dis_p,profit_dis_p,"Scripts_mql5_buy",magic_no);
+   }
 }
 
 
@@ -29,6 +34,8 @@ bool Od_Send(string symb, ENUM_ORDER_TYPE od_ty , double od_lots, double open_pr
                
    MqlTradeRequest request;
    MqlTradeResult  result;
+   ZeroMemory(request);
+   ZeroMemory(result);
    
    if(od_ty==ORDER_TYPE_BUY || od_ty==ORDER_TYPE_SELL){ 
       request.action   =TRADE_ACTION_DEAL;}
@@ -50,6 +57,7 @@ bool Od_Send(string symb, ENUM_ORDER_TYPE od_ty , double od_lots, double open_pr
    if(sl_p==0 || DoubleToString(sl_p)=="")sl=0;
    if(tp_p==0 || DoubleToString(tp_p)=="")tp=0;
    
+   Print("symb: ",symb, "    od_ty: ", od_ty, "   open_pri: ",open_pri, "  sl: ",sl, "  tp: ",tp);
    request.type      = od_ty ;  
    request.symbol    = symb;                        
    request.volume    = od_lots;                      
@@ -60,13 +68,35 @@ bool Od_Send(string symb, ENUM_ORDER_TYPE od_ty , double od_lots, double open_pr
    request.comment   = cmt;
    request.magic     = m_n;
    
-   request.type_filling = ORDER_FILLING_IOC;
-   
-   bool od_send=OrderSend(request,result); 
-   if(!od_send)
-   {
-      Print(" GetLastError(): "+GetLastError());   
+   bool od_send  = false;
+   for(int i=0;i<4;i++){   
+      
+      if(i==0)
+      {
+         request.type_filling = ORDER_FILLING_BOC;
+      }
+      if(i==1)
+      {
+         request.type_filling = ORDER_FILLING_FOK;
+      }
+      if(i==2)
+      {
+         request.type_filling = ORDER_FILLING_IOC;
+      }
+      if(i==3)
+      {
+         request.type_filling = ORDER_FILLING_RETURN;
+      }
+      
+      od_send=OrderSend(request,result); 
+      if(!od_send)
+      {
+         //Print(" GetLastError(): "+GetLastError());   
+      }else
+      {
+         Print(request.type_filling);   
+         break;
+      }
    }
-   
    return od_send;
 } 

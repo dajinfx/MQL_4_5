@@ -20,8 +20,12 @@ double loss_dis_p = 200;
 
 void OnStart()
 {
-   double bid=SymbolInfoDouble(Symbol(),SYMBOL_BID);
-   bool od_result = Od_Send(Symbol(),ORDER_TYPE_SELL, Lots, bid,loss_dis_p,profit_dis_p,"Scripts_mql5_sell",magic_no);
+   bool od_result = false;
+   
+   while(!od_result){
+      double bid=SymbolInfoDouble(Symbol(),SYMBOL_BID);
+      od_result = Od_Send(Symbol(),ORDER_TYPE_SELL, Lots, bid,loss_dis_p,profit_dis_p,"Scripts_mql5_sell",magic_no);
+   }
 }
 
 
@@ -29,6 +33,8 @@ bool Od_Send(string symb, ENUM_ORDER_TYPE od_ty , double od_lots, double open_pr
                
    MqlTradeRequest request;
    MqlTradeResult  result;
+   ZeroMemory(request);
+   ZeroMemory(result);
    
    if(od_ty==ORDER_TYPE_BUY || od_ty==ORDER_TYPE_SELL){ 
       request.action   =TRADE_ACTION_DEAL;}
@@ -83,7 +89,7 @@ bool Od_Send(string symb, ENUM_ORDER_TYPE od_ty , double od_lots, double open_pr
       od_send=OrderSend(request,result); 
       if(!od_send)
       {
-         Print(" GetLastError(): "+GetLastError());   
+         //Print(" GetLastError(): "+GetLastError());   
       }else
       {
          Print(request.type_filling);   
