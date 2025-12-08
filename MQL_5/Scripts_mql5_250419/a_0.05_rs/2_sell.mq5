@@ -29,6 +29,7 @@ void OnStart()
    while(!od_result){
       double bid=SymbolInfoDouble(Symbol(),SYMBOL_BID);
       od_result = Od_Send(Symbol(),ORDER_TYPE_SELL, Lots, bid,loss_dis_p,profit_dis_p,"Scripts_mql5_sell",magic_no);
+      if(od_result)break;
    }
 }
 

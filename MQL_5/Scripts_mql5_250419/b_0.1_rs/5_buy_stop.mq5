@@ -31,6 +31,7 @@ void OnStart()
    
    while(!od_result){
       od_result = Od_Send(Symbol(), ORDER_TYPE_BUY_STOP, Lots, buystop_price, loss_dis_p, profit_dis_p, "Scripts_mql5_sellstop", magic_no);
+      if(od_result)break;
    }
 }
 

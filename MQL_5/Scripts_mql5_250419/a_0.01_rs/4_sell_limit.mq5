@@ -31,7 +31,9 @@ void OnStart()
    bool od_result = false;
    
    while(!od_result){
-      od_result = Od_Send(Symbol(), ORDER_TYPE_SELL_LIMIT, Lots, selllimit_price, loss_dis_p, profit_dis_p, "Scripts_mql5_sellstop", magic_no);
+      od_result = Od_Send(Symbol(), ORDER_TYPE_SELL_LIMIT, Lots, selllimit_price, loss_dis_p, profit_dis_p, "Scripts_mql5_selllimit", magic_no);
+      
+      if(od_result)break;
    }
 }
  
